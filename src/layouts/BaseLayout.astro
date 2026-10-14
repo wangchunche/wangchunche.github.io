@@ -1,0 +1,19 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import { localeFromPath } from "../locales/translation";
+
+const locale = localeFromPath(Astro.url.pathname);
+---
+
+<html lang={locale} class="dark" data-theme="dark">
+  <BaseHead />
+  <body class="overflow-y-hidden">
+    <slot />
+  </body>
+</html>
+
+<style>
+  body {
+    @apply bg-[var(--background-color)];
+  }
+</style>

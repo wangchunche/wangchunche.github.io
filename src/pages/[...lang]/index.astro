@@ -1,0 +1,48 @@
+---
+import Main from "../../layouts/MainLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { GetSortedPosts } from "../../utils/content";
+import { localeFromPath } from "../../locales/translation";
+import { getLocalePaths } from "./_locale";
+
+export const getStaticPaths = getLocalePaths;
+
+const locale = localeFromPath(Astro.url.pathname);
+const posts = await GetSortedPosts(locale);
+const emptyText = locale === "zh-cn" ? "还没有文章。" : "No posts yet.";
+---
+
+<Main>
+  <div class="space-y-8">
+    {
+      posts.length === 0 && (
+        <div class="mx-3 rounded-3xl bg-[var(--card-color)] p-10 text-center text-[var(--text-color-lighten)] lg:mx-0">
+          {emptyText}
+        </div>
+      )
+    }
+    <div class="w-full space-y-4">
+      {
+        posts.map((entry, index) => (
+          <div
+            class="onload-animation"
+            style={`animation-delay: calc(var(--onload-animation-delay) + ${index + 1} * var(--onload-animation-interval));`}
+          >
+            <PostCard
+              id={entry.id}
+              title={entry.data.title}
+              published={entry.data.published}
+              category={entry.data.category}
+              tags={entry.data.tags}
+              description={entry.data.description}
+              image={entry.data.cover}
+              readingMetadata={
+                (entry.rendered!.metadata as any).frontmatter.readingMetadata
+              }
+            />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Main>

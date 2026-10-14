@@ -1,0 +1,18 @@
+---
+import PostArchiveLayout from "../../layouts/PostArchiveLayout.astro";
+import I18nKeys from "../../locales/keys";
+import { localeFromPath, useI18n } from "../../locales/translation";
+import { GetArchives } from "../../utils/content";
+import { getLocalePaths } from "./_locale";
+
+export const getStaticPaths = getLocalePaths;
+
+const locale = localeFromPath(Astro.url.pathname);
+const i18n = useI18n(Astro.url.pathname);
+const archiveMap = await GetArchives(locale);
+---
+
+<PostArchiveLayout
+  archiveMap={archiveMap}
+  title={i18n(I18nKeys.pages_archive_archive)}
+/>

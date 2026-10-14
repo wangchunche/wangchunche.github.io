@@ -1,0 +1,44 @@
+---
+import PostArchiveLayout from "../../../layouts/PostArchiveLayout.astro";
+import I18nKeys from "../../../locales/keys";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  localeFromPath,
+  useI18n,
+} from "../../../locales/translation";
+import { GetTags, type Archive } from "../../../utils/content";
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const locale of LOCALES) {
+    const tags = await GetTags(locale);
+    for (const tag of tags.keys()) {
+      paths.push({
+        params: { lang: locale === DEFAULT_LOCALE ? undefined : locale, tag },
+      });
+    }
+  }
+  return paths;
+}
+
+const locale = localeFromPath(Astro.url.pathname);
+const i18n = useI18n(Astro.url.pathname);
+const tags = await GetTags(locale);
+const { tag } = Astro.params;
+
+const posts = tags.get(tag)!.posts;
+const tagName = tags.get(tag)!.name;
+const archiveMap = new Map<number, Array<Archive>>();
+posts.forEach((post) => {
+  const year = post.date.getFullYear();
+  if (archiveMap.has(year)) archiveMap.get(year)!.push(post);
+  else archiveMap.set(year, [post]);
+});
+---
+
+<PostArchiveLayout
+  archiveMap={archiveMap}
+  title={tagName}
+  subTitle={i18n(I18nKeys.pages_tags_archive)}
+/>

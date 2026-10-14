@@ -1,0 +1,52 @@
+---
+import Main from "../../layouts/MainLayout.astro";
+import I18nKeys from "../../locales/keys";
+import { localeFromPath, useI18n } from "../../locales/translation";
+import { friends } from "../../data/friends";
+import { getLocalePaths } from "./_locale";
+
+export const getStaticPaths = getLocalePaths;
+
+const locale = localeFromPath(Astro.url.pathname);
+const i18n = useI18n(Astro.url.pathname);
+const emptyText = locale === "zh" ? "还没有添加友链。" : "No links yet.";
+---
+
+<Main title={i18n(I18nKeys.nav_bar_links)}>
+  {
+    friends.length === 0 ? (
+      <div class="mx-3 rounded-2xl bg-[var(--card-color)] p-10 text-center text-[var(--text-color-lighten)] lg:mx-0">
+        {emptyText}
+      </div>
+    ) : (
+      <div class="mx-3 grid grid-cols-1 gap-3 md:grid-cols-2 lg:mx-0">
+        {friends.map((friend) => (
+          <a
+            href={friend.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex flex-row items-center space-x-4 rounded-2xl bg-[var(--card-color)] p-4 transition-all hover:brightness-95 dark:hover:brightness-110"
+          >
+            {friend.avatar && (
+              <img
+                src={friend.avatar}
+                alt=""
+                class="h-12 w-12 shrink-0 rounded-xl object-cover"
+              />
+            )}
+            <div class="min-w-0">
+              <p class="truncate font-semibold text-[var(--text-color)]">
+                {friend.name}
+              </p>
+              <p class="truncate text-sm text-[var(--text-color-lighten)]">
+                {friend.description?.[locale] ??
+                  friend.description?.en ??
+                  friend.url}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</Main>

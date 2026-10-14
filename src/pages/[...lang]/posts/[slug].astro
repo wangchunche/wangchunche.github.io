@@ -1,0 +1,119 @@
+---
+import { render } from "astro:content";
+import PostLayout from "../../../layouts/PostLayout.astro";
+import Main from "../../../layouts/MainLayout.astro";
+import Comments from "../../../components/Comments.astro";
+import I18nKeys from "../../../locales/keys";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  LOCALE_LABELS,
+  localeFromPath,
+  localePrefix,
+  useI18n,
+} from "../../../locales/translation";
+import {
+  GetSortedPosts,
+  GetTranslationIndex,
+  SlugOf,
+} from "../../../utils/content";
+import { IdToSlug } from "../../../utils/hash";
+
+export async function getStaticPaths() {
+  const paths: any[] = [];
+  const translationIndex = await GetTranslationIndex();
+
+  for (const locale of LOCALES) {
+    const lang = locale === DEFAULT_LOCALE ? undefined : locale;
+    const posts = await GetSortedPosts(locale);
+    const translated = new Set(posts.map((post: any) => SlugOf(post.id)));
+
+    for (const entry of posts) {
+      const slug = SlugOf(entry.id);
+      paths.push({
+        params: { lang, slug: IdToSlug(slug) },
+        props: {
+          locale,
+          entry,
+          slug,
+          availableIn: translationIndex.get(slug) ?? [],
+        },
+      });
+    }
+
+    for (const [slug, locales] of translationIndex) {
+      if (translated.has(slug)) continue;
+      paths.push({
+        params: { lang, slug: IdToSlug(slug) },
+        props: { locale, entry: null, slug, availableIn: locales },
+      });
+    }
+  }
+  return paths;
+}
+
+const { locale, entry, slug, availableIn } = Astro.props;
+const i18n = useI18n(Astro.url.pathname);
+const prefix = localePrefix(locale);
+const Content = entry ? (await render(entry)).Content : null;
+---
+
+{
+  entry && Content ? (
+    <PostLayout
+      title={entry.data.title}
+      subTitle={entry.data.description}
+      bannerImage={entry.data.cover}
+      published={entry.data.published}
+      license={
+        entry.data.licenseName
+          ? { name: entry.data.licenseName, url: entry.data.licenseUrl }
+          : undefined
+      }
+      author={entry.data.author}
+      sourceLink={entry.data.sourceLink}
+    >
+      <div
+        class="hidden"
+        data-pagefind-body
+        data-pagefind-weight="10"
+        data-pagefind-meta="title"
+      >
+        {entry.data.title}
+      </div>
+      <div data-pagefind-body>
+        <Content />
+      </div>
+      <Comments lang={locale} />
+    </PostLayout>
+  ) : (
+    <Main title={i18n(I18nKeys.translation_in_progress_title)} data-pagefind-ignore>
+      <div class="mx-3 flex flex-col items-center rounded-2xl bg-[var(--card-color)] p-10 text-center lg:mx-0">
+        <p class="text-2xl font-semibold text-[var(--text-color)]">
+          {i18n(I18nKeys.translation_in_progress_title)}
+        </p>
+        <p class="mt-4 text-[var(--text-color-lighten)]">
+          {i18n(I18nKeys.translation_in_progress_message)}
+        </p>
+        {
+          availableIn.length > 0 && (
+            <div class="mt-6 flex flex-row items-center space-x-3">
+              <span class="text-sm text-[var(--text-color-lighten)]">
+                {i18n(I18nKeys.translation_available_in)}
+              </span>
+              {availableIn.map((item: string) => (
+                <a
+                  class="rounded-lg bg-[var(--primary-color-lighten)] px-3 py-1 text-sm text-[var(--primary-color)]"
+                  href={`${localePrefix(item)}/posts/${IdToSlug(slug)}`}
+                  data-no-swup
+                >
+                  {LOCALE_LABELS[item] ?? item}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </Main>
+  )
+}

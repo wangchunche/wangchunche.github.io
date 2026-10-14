@@ -1,0 +1,94 @@
+---
+import YukinaConfig from "../../yukina.config";
+import GlobalStyles from "./GlobalStyles.astro";
+import ScriptSetup from "./ScriptSetup.astro";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  localeSwitchUrl,
+} from "../locales/translation";
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const alternates = LOCALES.map((locale) => ({
+  locale: locale,
+  href: new URL(localeSwitchUrl(Astro.url.pathname, locale), YukinaConfig.site)
+    .href,
+}));
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<script is:inline>
+  (function () {
+    var theme = localStorage.getItem("theme") || "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  })();
+</script>
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Language alternates -->
+{
+  alternates.map((alternate) => (
+    <link
+      rel="alternate"
+      hreflang={alternate.locale}
+      href={alternate.href}
+    />
+  ))
+}
+<link
+  rel="alternate"
+  hreflang="x-default"
+  href={
+    new URL(
+      localeSwitchUrl(Astro.url.pathname, DEFAULT_LOCALE),
+      YukinaConfig.site,
+    ).href
+  }
+/>
+
+<!-- Primary Meta Tags -->
+<title>{YukinaConfig.title}</title>
+<meta name="title" content={YukinaConfig.title} />
+<meta name="description" content={YukinaConfig.description} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={YukinaConfig.title} />
+<meta property="og:description" content={YukinaConfig.description} />
+<!-- <meta property="og:image" content={new URL(image, Astro.url)} /> -->
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={YukinaConfig.title} />
+<meta property="twitter:description" content={YukinaConfig.description} />
+<!-- <meta property="twitter:image" content={new URL(image, Astro.url)} /> -->
+
+<!-- RSS AutoDiscovery -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={YukinaConfig.title}
+  href={new URL("rss.xml", Astro.site)}
+/>
+
+<!-- SiteMap -->
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- CSS -->
+<link
+  rel="stylesheet"
+  href="https://fastly.jsdelivr.net/npm/katex/dist/katex.min.css"
+/>
+
+<GlobalStyles />
+<ScriptSetup />
