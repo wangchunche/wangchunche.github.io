@@ -1,0 +1,18 @@
+---
+export interface Props {
+  lang?: string;
+}
+
+const { lang = "en" } = Astro.props;
+const giscusLang = lang === "zh" ? "zh-CN" : "en";
+---
+
+<section class="comments" data-pagefind-ignore>
+  <div class="giscus-container" data-lang={giscusLang}></div>
+</section>
+
+<style>
+  .comments {
+    @apply mt-6 rounded-2xl bg-[var(--card-color)] p-4 lg:p-6;
+  }
+</style>

@@ -1,0 +1,145 @@
+---
+
+---
+
+<script>
+  import lozad from "lozad";
+  import { OverlayScrollbars } from "overlayscrollbars";
+
+  // Links marked with data-no-swup (language switches) must be real page loads:
+  // swup only swaps "main"/"footer", so the header and sidebar would otherwise
+  // keep the previous locale.
+  document.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target;
+      const link =
+        target instanceof Element ? target.closest("a[data-no-swup]") : null;
+      if (!link) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.location.assign(link.getAttribute("href") || "/");
+    },
+    true,
+  );
+
+  // setup post url
+  const setupUrlAnchor = () => {
+    const url = window.location.href;
+    const urlElement = document.getElementById("post-url") as HTMLAnchorElement;
+    if (urlElement) {
+      urlElement.href = url;
+      urlElement.innerText = url;
+    }
+  };
+
+  // setup lazy load for images
+  const setupLozad = () => {
+    const observer = lozad(".lozad", {
+      loaded: (el) => {
+        el.classList.add("loaded");
+      },
+    });
+
+    observer.observe();
+  };
+
+  // add global scroll bar
+  const setupScrollBar = () => {
+    OverlayScrollbars(
+      { target: document.body, cancel: { nativeScrollbarsOverlaid: true } },
+      {
+        scrollbars: {
+          theme: "scrollbar-base scrollbar-auto py-1",
+          autoHide: "move",
+        },
+      },
+    );
+    document.body.classList.remove("overflow-y-hidden");
+
+    // add scrollbar for code blocks
+    document.querySelectorAll("pre").forEach((ele) => {
+      OverlayScrollbars(ele, {
+        scrollbars: {
+          theme: "scrollbar-base scrollbar-dark px-2",
+          autoHide: "leave",
+          autoHideDelay: 500,
+          autoHideSuspend: false,
+        },
+      });
+    });
+  };
+
+  // giscus comments: created on demand, theme kept in sync with the site
+  let giscusThemeObserverAttached = false;
+
+  const setupGiscus = () => {
+    const container = document.querySelector(".giscus-container");
+    if (!container) return;
+
+    if (!giscusThemeObserverAttached) {
+      giscusThemeObserverAttached = true;
+      new MutationObserver(() => {
+        const iframe = document.querySelector("iframe.giscus-frame");
+        if (!iframe || !iframe.contentWindow) return;
+        const theme =
+          document.documentElement.getAttribute("data-theme") === "dark"
+            ? "dark"
+            : "light";
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme } } },
+          "https://giscus.app",
+        );
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+    }
+
+    if (container.getAttribute("data-loaded") === "1") return;
+    container.setAttribute("data-loaded", "1");
+
+    const theme =
+      (localStorage.getItem("theme") || "dark") === "dark" ? "dark" : "light";
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+
+    const attributes = {
+      "data-repo": "wangchunche/wangchunche.github.io",
+      "data-repo-id": "R_kgDOVJpuWg",
+      "data-category": "Announcements",
+      "data-category-id": "DIC_kwDOVJpuWs4DIyGH",
+      "data-mapping": "pathname",
+      "data-strict": "1",
+      "data-reactions-enabled": "1",
+      "data-emit-metadata": "0",
+      "data-input-position": "top",
+      "data-theme": theme,
+      "data-lang": container.getAttribute("data-lang") || "en",
+    };
+
+    Object.entries(attributes).forEach(([key, value]) => {
+      script.setAttribute(key, value);
+    });
+    container.appendChild(script);
+  };
+
+  // init
+  const setup = () => {
+    setupUrlAnchor();
+    setupLozad();
+    setupScrollBar();
+    setupGiscus();
+  };
+
+  document.addEventListener("DOMContentLoaded", setup);
+  if (window.swup?.hooks) {
+    setup();
+  } else {
+    document.addEventListener("swup:enable", () => {
+      window.swup.hooks.on("content:replace", setup);
+    });
+  }
+</script>
