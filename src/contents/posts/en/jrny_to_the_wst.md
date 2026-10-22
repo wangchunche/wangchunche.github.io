@@ -53,7 +53,7 @@ My very first time flying was on an A380 — I’m certainly a lucky person, at 
 Disheartening fact: This flight took off at midnight and landed before sunrise, so I didn't have a chance to take a good look at it.
 
 ![A380 at SFO shot by Mike Ogilvy](/images/posts/jrny_to_the_wst/a380_sfo.jpg)
-A380 at SFO shot by [Mike Ogilvy](https://mikeogilvy.github.io/photography/)
+*A380 at SFO shot by [Mike Ogilvy](https://mikeogilvy.github.io/photography/)*
 
 That was my first time on an airplane, and also my first time abroad.
 
