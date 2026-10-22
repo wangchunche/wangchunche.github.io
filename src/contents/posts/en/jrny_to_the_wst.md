@@ -22,7 +22,7 @@ The **tremendous** country — the United States of America — has made me a mo
 
 ## Pudong International Airport (PVG) and Airbus A380
 
-People fear the unknown, and I was unwilling to travel 7,500 miles to the other end of earth on my own. Thankfully my roommate [NeoJuliet](https://neojulietblog.netlify.app/) was taking the same flight, so I had someone to chat with.
+People fear the unknown, and I was unwilling to travel 7,500 miles to the other end of earth on my own. Thankfully my roommate was taking the same flight, so I had someone to chat with.
 
 Getting up early in the morning, my parents drove me to Shanghai Pudong International Airport (上海浦东国际机场).
 
@@ -39,18 +39,21 @@ But the thing is, I felt the size of Terminal 2's Passenger Waiting Area even sl
 The check-in counter was very efficient: my baggage drop-off was handled quickly, and my boarding pass was printed in an instant.
 
 ![My Boarding Pass](/images/posts/jrny_to_the_wst/boarding_pass.jpg)
+*My Boarding Pass*
 
 And the Customs Officer was trying his best to be thorough: he kindly requested my Form I-20, questioned whether I was an undergraduate or a doctoral student, how long I would stay, and warned me again about the risks of going abroad. Then I noticed a group of girls heading to Kuala Lumpur were also intercepted by him, and were requested to show their hotel booking details. By contrast, the U.S. officer just asked for essential documents and let me go.
 
 By the boarding gate I spotted the Airbus A380 I would be flying on.
 
 ![A380](/images/posts/jrny_to_the_wst/a380.jpg)
+*A380*
 
 My very first time flying was on an A380 — I’m certainly a lucky person, at least before having settled down at my economy class seat. Its larger size did not result in more legroom, but rather more seats. In the end it **is** the largest airliner ever, isn't it?
 
 Disheartening fact: This flight took off at midnight and landed before sunrise, so I didn't have a chance to take a good look at it.
 
-![A380 at SFO shot by [Mike Ogilvy](https://mikeogilvy.github.io/photography/)](/images/posts/jrny_to_the_wst/a380_sfo.jpg)
+![A380 at SFO shot by Mike Ogilvy](/images/posts/jrny_to_the_wst/a380_sfo.jpg)
+A380 at SFO shot by [Mike Ogilvy](https://mikeogilvy.github.io/photography/)
 
 That was my first time on an airplane, and also my first time abroad.
 
