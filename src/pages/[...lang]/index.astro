@@ -9,7 +9,7 @@ export const getStaticPaths = getLocalePaths;
 
 const locale = localeFromPath(Astro.url.pathname);
 const posts = await GetSortedPosts(locale);
-const emptyText = locale === "zh-cn" ? "还没有文章。" : "No posts yet.";
+const emptyText = locale === "zh" ? "还没有文章。" : "No posts yet.";
 ---
 
 <Main>
