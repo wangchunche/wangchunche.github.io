@@ -68,10 +68,10 @@ const navHref = (href: string) =>
     </div>
     <div class="toolbar">
       <div class="lg:hidden">
-        <MobileSearchBar client:only="svelte" lang={locale} />
+        <MobileSearchBar client:load lang={locale} />
       </div>
       <div class="hidden lg:block">
-        <SearchBar client:only="svelte" lang={locale} />
+        <SearchBar client:load lang={locale} />
       </div>
       <div class="lang-switcher">
         {

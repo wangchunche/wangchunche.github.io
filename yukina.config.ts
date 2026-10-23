@@ -27,10 +27,6 @@ const YukinaConfig: Configuration = {
       nameKey: I18nKeys.nav_bar_links,
       href: "/links",
     },
-    {
-      nameKey: I18nKeys.nav_bar_github,
-      href: "https://github.com/wangchunche",
-    },
   ],
 
   username: "Wang Chün-Chê",

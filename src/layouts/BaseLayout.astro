@@ -3,11 +3,12 @@ import BaseHead from "../components/BaseHead.astro";
 import { localeFromPath } from "../locales/translation";
 
 const locale = localeFromPath(Astro.url.pathname);
+const { title, description } = Astro.props;
 ---
 
 <html lang={locale} class="dark" data-theme="dark">
-  <BaseHead />
-  <body class="overflow-y-hidden">
+  <BaseHead title={title} description={description} />
+  <body>
     <slot />
   </body>
 </html>

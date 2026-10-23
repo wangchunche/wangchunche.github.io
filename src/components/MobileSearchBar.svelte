@@ -60,7 +60,8 @@
   });
 
   // handle click outside to closed search pannel
-  document.addEventListener("click", (event) => {
+  if (typeof document !== "undefined")
+    document.addEventListener("click", (event) => {
     if (
       !resultPannel.contains(event.target as any) &&
       !searchBar.contains(event.target as any) &&
