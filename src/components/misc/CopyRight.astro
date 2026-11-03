@@ -21,6 +21,7 @@ const locale = localeFromPath(Astro.url.pathname);
 const i18n = useI18n(Astro.url.pathname);
 const licenseName = license?.name ?? YukinaConfig.license.name;
 const licenseUrl = license?.url ?? YukinaConfig.license.url;
+const postUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 ---
 
 <div
@@ -34,8 +35,12 @@ const licenseUrl = license?.url ?? YukinaConfig.license.url;
       <a
         class="rounded-md px-1 py-0.5 text-sm transition-all hover:bg-[var(--primary-color-lighten)]"
         id={sourceLink ? "source-link" : "post-url"}
-        href={sourceLink ?? ""}>{sourceLink ?? ""}</a
+        href={sourceLink ?? postUrl}
+        target={sourceLink ? "_blank" : undefined}
+        rel={sourceLink ? "noopener noreferrer" : undefined}
       >
+        {sourceLink ?? postUrl}
+      </a>
     </div>
     <div class="ml-1 flex flex-row space-x-4 lg:space-x-8">
       <div class="flex flex-col">
@@ -58,53 +63,42 @@ const licenseUrl = license?.url ?? YukinaConfig.license.url;
           {formatDate(published, locale)}
         </p>
       </div>
-      <div class="flex flex-col">
-        <span class="select-none text-sm text-[var(--text-color-lighten)]"
-          >{i18n(I18nKeys.copy_right_license)}</span
-        >
-        <!-- with special license -->
-        {
-          license && license.url && (
-            <a
-              class="line-clamp-1 text-sm text-[var(--text-color)] lg:text-base"
-              href={license.url}
-              target="_blank"
-            >
-              {license.name}
-            </a>
-          )
-        }
-        {
-          license && !license.url && (
-            <p class="!my-0 line-clamp-1 text-sm text-[var(--text-color)] lg:text-base">
-              {license.name}
-            </p>
-          )
-        }
-        <!-- without special license -->
-        {
-          !license && (
-            <a
-              class="line-clamp-1 text-sm text-[var(--text-color)] lg:text-base"
-              href={YukinaConfig.license.url}
-              target="_blank"
-            >
-              {YukinaConfig.license.name}
-            </a>
-          )
-        }
-      </div>
+      {
+        licenseName && (
+          <div class="flex flex-col">
+            <span class="select-none text-sm text-[var(--text-color-lighten)]">
+              {i18n(I18nKeys.copy_right_license)}
+            </span>
+            {licenseUrl ? (
+              <a
+                class="line-clamp-1 text-sm text-[var(--text-color)] lg:text-base"
+                href={licenseUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {licenseName}
+              </a>
+            ) : (
+              <p class="!my-0 line-clamp-1 text-sm text-[var(--text-color)] lg:text-base">
+                {licenseName}
+              </p>
+            )}
+          </div>
+        )
+      }
     </div>
   </div>
-  <div
-    class="relative right-0 top-1/2 z-0 flex h-32 -translate-y-1/2 overflow-hidden lg:h-36"
-  >
-    <Icon
-      name="ooui:logo-cc"
-      size={230}
-      class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 dark:text-[var(--card-color)]"
-    />
-  </div>
+  {
+    licenseName && (
+      <div class="relative right-0 top-1/2 z-0 flex h-32 -translate-y-1/2 overflow-hidden lg:h-36">
+        <Icon
+          name="ooui:logo-cc"
+          size={230}
+          class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-300 dark:text-[var(--card-color)]"
+        />
+      </div>
+    )
+  }
 </div>
 
 <style>

@@ -2,12 +2,24 @@
 import BaseHead from "../components/BaseHead.astro";
 import { localeFromPath } from "../locales/translation";
 
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  image?: string;
+}
+
 const locale = localeFromPath(Astro.url.pathname);
-const { title, description } = Astro.props;
+const { title, description, noindex, image } = Astro.props;
 ---
 
 <html lang={locale} class="dark" data-theme="dark">
-  <BaseHead title={title} description={description} />
+  <BaseHead
+    title={title}
+    description={description}
+    noindex={noindex}
+    image={image}
+  />
   <body>
     <slot />
   </body>

@@ -33,8 +33,39 @@ export function localeFromPath(pathname: string): string {
   return isLocale(locale) ? locale : DEFAULT_LOCALE;
 }
 
+function taxonomyDetailSection(
+  pathname: string,
+): "tags" | "categories" | null {
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts.length > 0 && isLocale(parts[0])) {
+    parts.shift();
+  }
+  if (
+    (parts[0] === "tags" || parts[0] === "categories") &&
+    parts.length > 1
+  ) {
+    return parts[0];
+  }
+  return null;
+}
+
+/** True for /tags/<tag>/ and /categories/<category>/ pages. */
+export function isTaxonomyDetail(pathname: string): boolean {
+  return taxonomyDetailSection(pathname) !== null;
+}
+
 export function localeSwitchUrl(pathname: string, locale: string): string {
   const current = localeFromPath(pathname);
+
+  // Tag and category slugs are language-specific (US vs 主板), so there may be
+  // no counterpart in the other locale. Fall back to that locale's index.
+  if (locale !== current) {
+    const section = taxonomyDetailSection(pathname);
+    if (section) {
+      return `${localePrefix(locale)}/${section}/`;
+    }
+  }
+
   let rest = pathname;
   if (current !== DEFAULT_LOCALE) {
     rest = pathname.slice(localePrefix(current).length);

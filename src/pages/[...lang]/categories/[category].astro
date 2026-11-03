@@ -8,6 +8,7 @@ import {
   useI18n,
 } from "../../../locales/translation";
 import { GetCategories, type Archive } from "../../../utils/content";
+import { yearInSiteTimeZone } from "../../../utils/date";
 
 export async function getStaticPaths() {
   const paths = [];
@@ -33,15 +34,20 @@ const { category } = Astro.params;
 const posts = categories.get(category)!.posts;
 const categoryName = categories.get(category)!.name;
 const archiveMap = new Map<number, Array<Archive>>();
-posts.forEach((post) => {
-  const year = post.date.getFullYear();
-  if (archiveMap.has(year)) archiveMap.get(year)!.push(post);
-  else archiveMap.set(year, [post]);
-});
+[...posts]
+  .sort((a, b) => b.date.getTime() - a.date.getTime())
+  .forEach((post) => {
+    const year = yearInSiteTimeZone(post.date);
+    if (archiveMap.has(year)) archiveMap.get(year)!.push(post);
+    else archiveMap.set(year, [post]);
+  });
+const orderedArchiveMap = new Map(
+  [...archiveMap.entries()].sort((a, b) => b[0] - a[0]),
+);
 ---
 
 <PostArchiveLayout
-  archiveMap={archiveMap}
+  archiveMap={orderedArchiveMap}
   title={categoryName}
   subTitle={i18n(I18nKeys.pages_categories_archive)}
 />

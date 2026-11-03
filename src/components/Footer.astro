@@ -8,6 +8,7 @@ import {
 } from "../locales/translation";
 import I18nKeys from "../locales/keys";
 import { GetCategories, GetTags } from "../utils/content";
+import { yearInSiteTimeZone } from "../utils/date";
 
 const locale = localeFromPath(Astro.url.pathname);
 const prefix = localePrefix(locale);
@@ -156,7 +157,7 @@ const tagKeys = [...tags.keys()];
         ))
       }
       {
-        tagKeys.length >= YukinaConfig.maxFooterCategoryChip + 1 && (
+        tagKeys.length >= YukinaConfig.maxFooterTagChip + 1 && (
           <div class="absolute bottom-0 flex h-10 w-full flex-row items-center justify-center bg-gradient-to-t from-[var(--card-color)] from-25% to-transparent backdrop-blur-sm">
             <a
               href={`${prefix}/tags/`}
@@ -183,7 +184,7 @@ const tagKeys = [...tags.keys()];
       class="flex w-full flex-col items-center text-sm text-[var(--text-color-lighten)]"
     >
       <p>
-        © {new Date().getFullYear()}
+        © {yearInSiteTimeZone(new Date())}
         {YukinaConfig.username} All Rights Reserved.
       </p>
       <p>

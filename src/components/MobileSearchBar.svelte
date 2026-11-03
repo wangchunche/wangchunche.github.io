@@ -23,6 +23,14 @@
 
   let search = (keyword: string) => {};
 
+  const closeSearch = () => {
+    searchKeyword = "";
+    search("");
+    searchBar.style.height = "0px";
+    searchBar.style.opacity = "0";
+    searchBarDisplay = false;
+  };
+
   onMount(async () => {
     // setup overlay scrollbars
     OverlayScrollbars(resultPannel, {
@@ -96,6 +104,7 @@
     type="button"
     bind:this={searchButton}
     on:click={toggleSearchBar}
+    aria-label="Search"
     class="flex w-11 justify-center rounded-lg py-2 text-[var(--text-color)] transition-all hover:bg-[var(--primary-color-hover)] hover:text-[var(--primary-color)]"
   >
     <Icon icon="mingcute:search-line" height={24} width={24} />
@@ -118,6 +127,7 @@
       </label>
       <input
         id="search-bar-input-mobile"
+        aria-label={i18n(lang, I18nKeys.nav_bar_search_placeholder)}
         class="text-[var(--text-color)] grow bg-transparent outline-none transition-all"
         placeholder={i18n(lang, I18nKeys.nav_bar_search_placeholder)}
         type="text"
@@ -137,7 +147,7 @@
 
   <!-- result pannel -->
   <div
-    id="result-pannel"
+    id="result-pannel-mobile"
     bind:this={resultPannel}
     class="max-h-[436px] overflow-y-scroll opacity-0 !absolute left-1/2 -translate-x-1/2 h-0 w-[95%] bg-[var(--card-color)] rounded-2xl top-[3.5rem] transition-all"
   >
@@ -147,6 +157,7 @@
       {#each searchResult as item}
         <a
           href={item.url}
+          on:click={closeSearch}
           class="mx-2 py-2 px-3 rounded-xl result-item transition-all"
         >
           <div class="flex flex-row space-x-1 items-center">

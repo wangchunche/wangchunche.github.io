@@ -5,25 +5,40 @@ import ScriptSetup from "./ScriptSetup.astro";
 import {
   DEFAULT_LOCALE,
   LOCALES,
+  isTaxonomyDetail,
+  localeFromPath,
+  localePrefix,
   localeSwitchUrl,
 } from "../locales/translation";
 
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
+  image?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex, image } = Astro.props;
 
+const locale = localeFromPath(Astro.url.pathname);
 const pageTitle = title ? title + " · " + YukinaConfig.title : YukinaConfig.title;
 const pageDescription = description || YukinaConfig.description;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const alternates = LOCALES.map((locale) => ({
-  locale: locale,
-  href: new URL(localeSwitchUrl(Astro.url.pathname, locale), YukinaConfig.site)
+const showAlternates = !isTaxonomyDetail(Astro.url.pathname);
+const alternates = LOCALES.map((item) => ({
+  locale: item,
+  href: new URL(localeSwitchUrl(Astro.url.pathname, item), YukinaConfig.site)
     .href,
 }));
+const ogImage = new URL(
+  image ?? YukinaConfig.banners[0],
+  YukinaConfig.site,
+).href;
+const rssURL = new URL(
+  `${localePrefix(locale)}/rss.xml`,
+  Astro.site,
+);
 ---
 
 <!-- Global Metadata -->
@@ -45,50 +60,57 @@ const alternates = LOCALES.map((locale) => ({
 
 <!-- Language alternates -->
 {
-  alternates.map((alternate) => (
+  showAlternates &&
+    alternates.map((alternate) => (
+      <link
+        rel="alternate"
+        hreflang={alternate.locale}
+        href={alternate.href}
+      />
+    ))
+}
+{
+  showAlternates && (
     <link
       rel="alternate"
-      hreflang={alternate.locale}
-      href={alternate.href}
+      hreflang="x-default"
+      href={
+        new URL(
+          localeSwitchUrl(Astro.url.pathname, DEFAULT_LOCALE),
+          YukinaConfig.site,
+        ).href
+      }
     />
-  ))
+  )
 }
-<link
-  rel="alternate"
-  hreflang="x-default"
-  href={
-    new URL(
-      localeSwitchUrl(Astro.url.pathname, DEFAULT_LOCALE),
-      YukinaConfig.site,
-    ).href
-  }
-/>
 
 <!-- Primary Meta Tags -->
 <title>{pageTitle}</title>
 <meta name="title" content={pageTitle} />
 <meta name="description" content={pageDescription} />
+{noindex && <meta name="robots" content="noindex, follow" />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
-<!-- <meta property="og:image" content={new URL(image, Astro.url)} /> -->
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={YukinaConfig.title} />
 
 <!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={pageTitle} />
-<meta property="twitter:description" content={pageDescription} />
-<!-- <meta property="twitter:image" content={new URL(image, Astro.url)} /> -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={pageDescription} />
+<meta name="twitter:image" content={ogImage} />
 
 <!-- RSS AutoDiscovery -->
 <link
   rel="alternate"
   type="application/rss+xml"
   title={YukinaConfig.title}
-  href={new URL("rss.xml", Astro.site)}
+  href={rssURL}
 />
 
 <!-- SiteMap -->

@@ -21,7 +21,8 @@ export async function GET(context: { site: string; url: URL }) {
   return rss({
     title: YukinaConfig.title,
     description: YukinaConfig.description,
-    site: context.site,
+    site: new URL(`${localePrefix(locale)}/`, context.site),
+    customData: `<language>${locale === "zh" ? "zh-CN" : "en"}</language>`,
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,

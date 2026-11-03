@@ -9,7 +9,9 @@ export const getStaticPaths = getLocalePaths;
 
 const locale = localeFromPath(Astro.url.pathname);
 const i18n = useI18n(Astro.url.pathname);
-const categories = [...(await GetCategories(locale)).values()].sort();
+const categories = [...(await GetCategories(locale)).values()].sort((a, b) =>
+  a.name.localeCompare(b.name, locale),
+);
 const chips = categories.map((category) => {
   return {
     name: category.name,

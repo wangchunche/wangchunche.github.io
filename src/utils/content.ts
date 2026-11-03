@@ -1,6 +1,7 @@
 import { getCollection } from "astro:content";
 import { IdToSlug } from "./hash";
 import { localePrefix } from "../locales/translation";
+import { yearInSiteTimeZone } from "./date";
 
 export interface Archive {
   title: string;
@@ -83,7 +84,7 @@ export async function GetArchives(locale: string) {
 
   for (const post of await GetPostsOfLocale(locale)) {
     const date = new Date(post.data.published);
-    const year = date.getFullYear();
+    const year = yearInSiteTimeZone(date);
     if (!archives.has(year)) {
       archives.set(year, []);
     }

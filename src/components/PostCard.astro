@@ -42,7 +42,7 @@ const { time, wordCount } = props.readingMetadata;
     <img
       class="lozad absolute left-0 top-0 h-full w-full rounded-t-3xl object-cover lg:hidden"
       data-src={props.image ?? GetCoverURLForUnspecifiedEntry(entryID)}
-      alt="CoverPost"
+      alt=""
     />
     <div class="absolute bottom-2 w-full">
       <div class="mx-2 flex flex-row justify-between">
@@ -77,7 +77,7 @@ const { time, wordCount } = props.readingMetadata;
         >
         </div>
         <a href={contentUrl} class="title">
-          <p class="truncate">{props.title}</p>
+          <h2 class="truncate">{props.title}</h2>
           <Icon
             name="cuida:caret-right-outline"
             class="translate-y-[0.07rem] text-[var(--primary-color)]"
@@ -156,7 +156,7 @@ const { time, wordCount } = props.readingMetadata;
         <img
           class="lozad h-[212px] w-[404px] select-none rounded-r-3xl object-cover dark:brightness-90"
           data-src={props.image ?? GetCoverURLForUnspecifiedEntry(entryID)}
-          alt="PostCover"
+          alt=""
         />
       </a>
     </div>

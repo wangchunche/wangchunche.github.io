@@ -59,7 +59,7 @@ const showText =
           <img
             class="item lozad"
             data-src={bannerImage ?? GetCoverURLForUnspecifiedEntry(slug ?? "")}
-            alt="PostCoverr"
+            alt=""
           />
         </div>
       )
@@ -132,7 +132,10 @@ const showText =
   const carouselImgs = document.getElementById("carousel_imgs");
   const carouselImgsCount = carouselImgs?.children.length ?? 0;
 
-  const carouselAnimation = `
+  const carouselAnimation =
+    carouselImgsCount === 0
+      ? ""
+      : `
   @keyframes carousel-animation {
     0% {
       opacity: 0;

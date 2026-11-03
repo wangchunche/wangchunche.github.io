@@ -5,11 +5,11 @@ import { localeFromPath } from "../../locales/translation";
 export interface Props {
   id: string;
   title: string;
-  pubilished: Date;
+  published: Date;
   tags: string[] | undefined;
 }
 
-const { id, title, pubilished } = Astro.props;
+const { id, title, published } = Astro.props;
 const locale = localeFromPath(Astro.url.pathname);
 ---
 
@@ -21,7 +21,7 @@ const locale = localeFromPath(Astro.url.pathname);
     <div class="flex w-[15%] flex-row justify-end md:w-[10%]">
       <p class="date text-sm text-[var(--text-color-lighten)]">
         {
-          formatDate(pubilished, locale, {
+          formatDate(published, locale, {
             month: "2-digit",
             day: "2-digit",
           })

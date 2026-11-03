@@ -21,6 +21,11 @@
 
   let search = (keyword: string) => {};
 
+  const closeSearch = () => {
+    searchKeyword = "";
+    search("");
+  };
+
   onMount(async () => {
     // setup overlay scrollbars
     OverlayScrollbars(resultPannel, {
@@ -81,6 +86,7 @@
     </label>
     <input
       id="search-bar-input"
+      aria-label={i18n(lang, I18nKeys.nav_bar_search_placeholder)}
       class="w-36 text-[var(--text-color)] xl:focus:w-60 bg-transparent outline-none transition-all"
       placeholder={i18n(lang, I18nKeys.nav_bar_search_placeholder)}
       type="text"
@@ -99,7 +105,7 @@
 </div>
 <!-- result pannel -->
 <div
-  id="result-pannel"
+  id="result-pannel-desktop"
   bind:this={resultPannel}
   class="max-h-[436px] overflow-y-scroll opacity-0 !absolute h-0 -right-3 w-[28rem] bg-[var(--card-color)] rounded-2xl top-20 transition-all"
 >
@@ -109,6 +115,7 @@
     {#each searchResult as item}
       <a
         href={item.url}
+        on:click={closeSearch}
         class="mx-2 py-2 px-3 rounded-xl result-item transition-all"
       >
         <div class="flex flex-row space-x-1 items-center">

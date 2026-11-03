@@ -12,12 +12,17 @@ export interface Props {
   subTitle?: string;
   bannerImage?: string;
   slug?: string;
+  noindex?: boolean;
 }
 
 const props = Astro.props;
 ---
 
-<Base title={props.title} description={props.subTitle}>
+<Base
+  title={props.title}
+  description={props.subTitle}
+  noindex={props.noindex}
+>
   <NavBar />
 
   {

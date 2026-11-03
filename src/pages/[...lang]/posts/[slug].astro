@@ -8,7 +8,6 @@ import {
   DEFAULT_LOCALE,
   LOCALES,
   LOCALE_LABELS,
-  localeFromPath,
   localePrefix,
   useI18n,
 } from "../../../locales/translation";
@@ -54,7 +53,6 @@ export async function getStaticPaths() {
 
 const { locale, entry, slug, availableIn } = Astro.props;
 const i18n = useI18n(Astro.url.pathname);
-const prefix = localePrefix(locale);
 const Content = entry ? (await render(entry)).Content : null;
 ---
 
@@ -87,8 +85,14 @@ const Content = entry ? (await render(entry)).Content : null;
       <Comments lang={locale} />
     </PostLayout>
   ) : (
-    <Main title={i18n(I18nKeys.translation_in_progress_title)} data-pagefind-ignore>
-      <div class="mx-3 flex flex-col items-center rounded-2xl bg-[var(--card-color)] p-10 text-center lg:mx-0">
+    <Main
+      title={i18n(I18nKeys.translation_in_progress_title)}
+      noindex
+    >
+      <div
+        class="mx-3 flex flex-col items-center rounded-2xl bg-[var(--card-color)] p-10 text-center lg:mx-0"
+        data-pagefind-ignore
+      >
         <p class="text-2xl font-semibold text-[var(--text-color)]">
           {i18n(I18nKeys.translation_in_progress_title)}
         </p>
@@ -104,7 +108,7 @@ const Content = entry ? (await render(entry)).Content : null;
               {availableIn.map((item: string) => (
                 <a
                   class="rounded-lg bg-[var(--primary-color-lighten)] px-3 py-1 text-sm text-[var(--primary-color)]"
-                  href={`${localePrefix(item)}/posts/${IdToSlug(slug)}`}
+                  href={`${localePrefix(item)}/posts/${IdToSlug(slug)}/`}
                   data-no-swup
                 >
                   {LOCALE_LABELS[item] ?? item}
