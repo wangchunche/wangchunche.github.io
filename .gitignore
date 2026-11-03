@@ -14,8 +14,10 @@ node_modules/
 .obsidian/
 .trash/
 
-# local writing notes (never committed)
+# local writing notes and agent files (never committed)
 /src/contents/*.md
+/AGENTS.md
+/src/contents/PROJECT_NOTES.md
 
 # logs
 npm-debug.log*
